@@ -14,7 +14,7 @@ export const StyledFooter = styled.footer`
     height: 72px;
     width: 48px;
   }
-  div {
+  div:first-of-type {
     margin-top: 14px;
     margin-left: 10px;
     display: flex;
