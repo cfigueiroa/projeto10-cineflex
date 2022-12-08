@@ -2,9 +2,8 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 export const ShowtimesContainer = styled.div`
-  padding-top: 67px;
-  padding-bottom: 117px;
   display: flex;
+  padding-top: 67px;
   flex-direction: column; 
   h3 {
     font-size: 20px;
@@ -36,6 +35,7 @@ export const BtnBox = styled.div`
   display: flex;
   gap: 8px;
   button {
+    border: none;
     width: 83px;
     height: 43px;
     background-color: #e8833a;

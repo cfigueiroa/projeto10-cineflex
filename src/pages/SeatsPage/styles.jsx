@@ -3,6 +3,11 @@ import { Link } from "react-router-dom";
 
 export const Container = styled.div`
   padding-top: 67px;
+  form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 export const Headline = styled.div`
@@ -54,6 +59,8 @@ export const SeatDiv = styled.div`
 `;
 
 export const SeatsDiv = styled.div`
+  margin: 0 auto;
+  max-width: 375px;
   display: flex;
   gap: 7px;
   flex-wrap: wrap;
@@ -61,8 +68,10 @@ export const SeatsDiv = styled.div`
 `;
 
 export const Info = styled.div`
+  max-width: 375px;
+  margin: 0 auto;
   padding-top: 15px;
-  padding-bottom: 42px;
+  padding-bottom: 15px;
   display: flex;
   justify-content: space-evenly;
 `;
@@ -72,8 +81,8 @@ export const InfoItem = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+
 export const StyledLabel = styled.label`
-  padding-left: 24px;
   gap: 7px;
   margin-top: 14px;
   display: flex;
@@ -99,6 +108,8 @@ export const StyledInput = styled.input`
 `;
 
 export const StyledButton = styled.button`
+  border: none;
+  margin-top: 24px;
   font-family: "Roboto";
   align-items: center;
   background-color: #e8833a;
@@ -109,12 +120,11 @@ export const StyledButton = styled.button`
   justify-content: center;
   height: 42px;
   width: 225px;
-  margin: 0 auto;
+  margin: 15px auto;
 `;
 
 export const StyledLink = styled(Link)`
   text-decoration: none;
-
   &:focus,
   &:hover,
   &:visited,

@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HomeContainer } from "./styles";
 import Header from "../Header";
 import MoviesPage from "../../pages/MoviesPage";
 import NotfoundPage from "../../pages/NotfoundPage";
 import SeatsPage from "../../pages/SeatsPage";
 import ShowtimesPage from "../../pages/ShowtimesPage";
-import styled from "styled-components";
 import SuccessPage from "../../pages/SuccessPage";
 
 export default function Home() {
@@ -23,5 +23,3 @@ export default function Home() {
     </HomeContainer>
   );
 }
-
-const HomeContainer = styled.div``;

@@ -26,6 +26,7 @@ export const SuccessContainer = styled.div`
     color: #293845;
   }
   button {
+    border: none;
     display: block;
     margin: 0 auto;
     width: 225px;
@@ -61,7 +62,6 @@ export const Campos = styled.div`
 `;
 
 export const CamposBox = styled.div``;
-
 
 export const StyledLink = styled(Link)`
   text-decoration: none;
