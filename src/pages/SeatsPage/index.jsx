@@ -2,24 +2,27 @@ import { Link, useParams } from "react-router-dom";
 import { url, endpoint } from "../../services/API";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Footer from "../Footer";
+import Footer from "../../components/Footer";
+import { Container, Headline } from "./styles";
 
-export default function Seats() {
-  const params = useParams();
+export default function SeatsPage() {
+  const { id } = useParams();
   const [seats, setSeats] = useState(undefined);
 
   useEffect(() => {
     axios
-      .get(`${url}/${endpoint[1]}/${params.id}/${endpoint[2]}`)
+      .get(`${url}/${endpoint[1]}/${id}/${endpoint[2]}`)
       .then((res) => setSeats(res.data))
       .catch((err) => console.log(err));
-  }, [params.id]);
+  }, [id]);
 
   if (!seats) return <div>Carregando...</div>;
 
   return (
-    <div>
-      <h1>Selecione o(s) assento(s)</h1>
+    <Container>
+      <Headline>
+        <h2>Selecione o(s) assento(s)</h2>
+      </Headline>
       {seats.seats.map((seat) => (
         <button key={seat.id}>{seat.name}</button>
       ))}
@@ -51,6 +54,6 @@ export default function Seats() {
         </Link>
       </form>
       <Footer />
-    </div>
+    </Container>
   );
 }

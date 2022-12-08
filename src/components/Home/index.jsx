@@ -1,10 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "../Header";
-import Movies from "../Movies";
-import Seats from "../Seats";
-import Showtimes from "../Showtimes";
+import MoviesPage from "../../pages/MoviesPage";
+import NotfoundPage from "../../pages/NotfoundPage";
+import SeatsPage from "../../pages/SeatsPage";
+import ShowtimesPage from "../../pages/ShowtimesPage";
 import styled from "styled-components";
-import Success from "../Success";
+import SuccessPage from "../../pages/SuccessPage";
 
 export default function Home() {
   return (
@@ -12,10 +13,11 @@ export default function Home() {
       <BrowserRouter>
         <Header />
         <Routes>
-          <Route path="/" element={<Movies />} />
-          <Route path="/sessoes/:id" element={<Showtimes />} />
-          <Route path="/assentos/:id" element={<Seats />} />
-          <Route path="/sucesso" element={<Success />} />
+          <Route path="/" element={<MoviesPage />} />
+          <Route path="/sessoes/:id" element={<ShowtimesPage />} />
+          <Route path="/assentos/:id" element={<SeatsPage />} />
+          <Route path="/sucesso" element={<SuccessPage />} />
+          <Route path="*" element={<NotfoundPage />} />
         </Routes>
       </BrowserRouter>
     </HomeContainer>

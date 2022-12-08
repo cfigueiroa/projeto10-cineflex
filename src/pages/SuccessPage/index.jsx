@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function Success() {
+export default function SuccessPage() {
   return (
     <div>
       <h2>Pedido feito com sucesso!</h2>

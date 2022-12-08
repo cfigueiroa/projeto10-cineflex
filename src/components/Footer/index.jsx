@@ -1,7 +1,5 @@
-export default function Footer() {
-  return (
-    <footer>
-      <p>Footer com ❤️</p>
-    </footer>
-  );
+import { StyledFooter } from "./styles";
+
+export default function Footer({ children }) {
+  return <StyledFooter>{children}</StyledFooter>;
 }

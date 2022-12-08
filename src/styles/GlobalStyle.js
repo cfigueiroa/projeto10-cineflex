@@ -53,6 +53,24 @@ const GlobalStyle = createGlobalStyle`
         border-collapse: collapse;
         border-spacing: 0;
     }
+
+    /*  */
+
+    :root {
+        font-family: 'Roboto', sans-serif;
+        --fsize0: 11px;		
+        --fsize1: 13px;		
+        --fsize2: 18px;		
+        --fsize3: 20px;		
+        --fsize4: 22px;		
+        --fsize5: 24px;	
+        --fsize6: 26px;		
+        --fsize7: 34px;
+    }
+
+    *, *:before, *:after {
+        box-sizing: border-box;
+    }
 `;
 
 export default GlobalStyle;

@@ -1,7 +1,11 @@
+import { StyledHeader, StyledLink } from "./styles";
+
 export default function Header() {
   return (
-    <header>
-      <h1>Cineflex</h1>
-    </header>
+    <StyledHeader>
+      <StyledLink to="/">
+        <h1>CINEFLEX</h1>
+      </StyledLink>
+    </StyledHeader>
   );
 }
