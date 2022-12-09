@@ -1,5 +1,11 @@
 import { useLocation } from "react-router-dom";
-import { SuccessContainer, Headline, Campos, CamposBox, StyledLink } from "./styles";
+import {
+  SuccessContainer,
+  Headline,
+  Campos,
+  CamposBox,
+  StyledLink,
+} from "./styles";
 
 export default function SuccessPage() {
   const location = useLocation();

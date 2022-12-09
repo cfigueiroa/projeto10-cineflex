@@ -10,6 +10,7 @@ import {
   StyledLink,
   ShowtimesContainer,
 } from "./styles";
+import Spinner from "../../components/Spinner";
 
 export default function ShowtimesPage() {
   const { id } = useParams();
@@ -22,7 +23,7 @@ export default function ShowtimesPage() {
       .catch((err) => console.log(err));
   }, [id]);
 
-  if (!showtimes) return <div>Carregando...</div>;
+  if (!showtimes) return <Spinner/>;
 
   return (
     <>

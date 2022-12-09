@@ -14,6 +14,7 @@ import {
   StyledInput,
   StyledButton,
 } from "./styles";
+import Spinner from "../../components/Spinner";
 
 export default function SeatsPage() {
   const { id } = useParams();
@@ -61,7 +62,16 @@ export default function SeatsPage() {
         .post(`${url}/${endpoint[2]}/${endpoint[3]}`, body)
         .then((res) => {
           console.log(res);
-          navigate('/sucesso/', {state:{nome:name,cpf:cpf,seats:pickedSeatsNames,movie:seats.movie.title,date:seats.day.date,hour:seats.name}} );
+          navigate("/sucesso/", {
+            state: {
+              nome: name,
+              cpf: cpf,
+              seats: pickedSeatsNames,
+              movie: seats.movie.title,
+              date: seats.day.date,
+              hour: seats.name,
+            },
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -78,7 +88,7 @@ export default function SeatsPage() {
       .catch((err) => console.log(err));
   }, [id]);
 
-  if (!seats) return <div>Carregando...</div>;
+  if (!seats) return <Spinner/>;
 
   return (
     <>

@@ -3,6 +3,7 @@ import { url, endpoint } from "../../services/API";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Container, Movie, Box, Headline } from "./styles";
+import Spinner from "../../components/Spinner";
 
 export default function MoviesPage() {
   const [movies, setMovies] = useState(undefined);
@@ -13,7 +14,7 @@ export default function MoviesPage() {
       .catch((err) => console.log(err));
   }, []);
 
-  if (!movies) return <div>Carregando...</div>;
+  if (!movies) return <Spinner/>;
 
   return (
     <Container>
