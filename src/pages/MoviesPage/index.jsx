@@ -9,12 +9,14 @@ export default function MoviesPage() {
   const [movies, setMovies] = useState(undefined);
   useEffect(() => {
     axios
-      .get(`${url}/${endpoint[0]}`)
+      .get(`${url}/${endpoint.movies}`)
       .then((res) => setMovies(res.data))
       .catch((err) => console.log(err));
   }, []);
 
-  if (!movies) return <Spinner />;
+  if (!movies) {
+    return <Spinner />;
+  }
 
   return (
     <Container>
@@ -25,7 +27,7 @@ export default function MoviesPage() {
         {movies.map((movie) => {
           return (
             <Link to={`/sessoes/${movie.id}`} key={movie.id}>
-              <Movie>
+              <Movie data-test="movie">
                 <img src={movie.posterURL} alt={movie.title} />
               </Movie>
             </Link>

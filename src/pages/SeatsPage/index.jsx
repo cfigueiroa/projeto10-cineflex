@@ -1,8 +1,3 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { url, endpoint } from "../../services/API";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import Footer from "../../components/Footer";
 import {
   Container,
   Headline,
@@ -14,37 +9,43 @@ import {
   StyledInput,
   StyledButton,
 } from "./styles";
-import Spinner from "../../components/Spinner";
 import { cpfMask } from "../../constants/mask";
+import { url, endpoint } from "../../services/API";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import Footer from "../../components/Footer";
+import Spinner from "../../components/Spinner";
 
 export default function SeatsPage() {
-  const { id } = useParams();
-  const [seats, setSeats] = useState(undefined);
-  const [pickedSeats, setPickedSeats] = useState([]);
-  const [pickedSeatsNames, setPickedSeatsNames] = useState([]);
-  const [name, setName] = useState("");
   const [cpf, setCpf] = useState("");
   const [footer, setFooter] = useState(true);
+  const [name, setName] = useState("");
+  const [pickedSeats, setPickedSeats] = useState([]);
+  const [pickedSeatsNames, setPickedSeatsNames] = useState([]);
+  const [seats, setSeats] = useState(undefined);
+  const { id } = useParams();
   const navigate = useNavigate();
 
   function addSeat(id, avaliable, name) {
-    if (avaliable) {
-      if (!pickedSeats.includes(id)) {
-        setPickedSeats([...pickedSeats, id]);
-        setPickedSeatsNames([...pickedSeatsNames, name]);
-      } else {
-        setPickedSeats(pickedSeats.filter((seat) => seat !== id));
-        setPickedSeatsNames(pickedSeatsNames.filter((seat) => seat !== name));
-      }
+    if (avaliable && pickedSeats.includes(id)) {
+      setPickedSeats(pickedSeats.filter((seat) => seat !== id));
+      setPickedSeatsNames(pickedSeatsNames.filter((seat) => seat !== name));
+    } else if (avaliable) {
+      setPickedSeats([...pickedSeats, id]);
+      setPickedSeatsNames([...pickedSeatsNames, name]);
     } else {
       alert("Assento indisponível");
     }
   }
 
   function getStatus(name, id) {
-    if (pickedSeats.includes(id)) return "selected";
-    else if (seats.seats[name - 1].isAvailable) return "available";
-    else return "unavailable";
+    if (pickedSeats.includes(id)) {
+      return "selected";
+    } else if (seats.seats[name - 1].isAvailable) {
+      return "available";
+    }
+    return "unavailable";
   }
 
   function customSubmit(e) {
@@ -55,22 +56,22 @@ export default function SeatsPage() {
       alert("Selecione pelo menos um assento");
     } else {
       const body = {
+        name,
+        cpf,
         ids: pickedSeats,
-        name: name,
-        cpf: cpf,
       };
       axios
-        .post(`${url}/${endpoint[2]}/${endpoint[3]}`, body)
+        .post(`${url}/${endpoint.seats}/${endpoint.bookMany}`, body)
         .then((res) => {
           console.log(res);
-          navigate("/sucesso/", {
+          navigate("/sucesso", {
             state: {
-              nome: name,
-              cpf: cpf,
-              seats: pickedSeatsNames,
-              movie: seats.movie.title,
+              cpf,
               date: seats.day.date,
               hour: seats.name,
+              movie: seats.movie.title,
+              nome: name,
+              seats: pickedSeatsNames,
             },
           });
         })
@@ -83,12 +84,14 @@ export default function SeatsPage() {
 
   useEffect(() => {
     axios
-      .get(`${url}/${endpoint[1]}/${id}/${endpoint[2]}`)
+      .get(`${url}/${endpoint.showtimes}/${id}/${endpoint.seats}`)
       .then((res) => setSeats(res.data))
       .catch((err) => console.log(err));
   }, [id]);
 
-  if (!seats) return <Spinner />;
+  if (!seats) {
+    return <Spinner />;
+  }
 
   return (
     <>
@@ -99,6 +102,7 @@ export default function SeatsPage() {
         <SeatsDiv>
           {seats.seats.map((seat) => (
             <SeatDiv
+              data-test="seat"
               status={getStatus(seat.name, seat.id)}
               key={seat.id}
               onClick={() => addSeat(seat.id, seat.isAvailable, seat.name)}
@@ -125,31 +129,33 @@ export default function SeatsPage() {
           <StyledLabel>
             Nome do comprador: <br />
             <StyledInput
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              type="text"
-              placeholder="Digite seu nome..."
-              onFocus={() => setFooter(false)}
+              data-test="client-name"
               onBlur={() => setFooter(true)}
+              onChange={(e) => setName(e.target.value)}
+              onFocus={() => setFooter(false)}
+              placeholder="Digite seu nome..."
+              required
+              type="text"
+              value={name}
             />{" "}
             <br />
           </StyledLabel>
           <StyledLabel>
             CPF do comprador: <br />
             <StyledInput
-              required
-              minLength="14"
+              data-test="client-cpf"
               maxLength="14"
-              value={cpf}
-              onChange={(e) => setCpf(cpfMask(e.target.value))}
-              placeholder="Digite seu CPF..."
-              onFocus={() => setFooter(false)}
+              minLength="14"
               onBlur={() => setFooter(true)}
+              onChange={(e) => setCpf(cpfMask(e.target.value))}
+              onFocus={() => setFooter(false)}
+              placeholder="Digite seu CPF..."
+              required
+              value={cpf}
             />
             <br />
           </StyledLabel>
-          <StyledButton>
+          <StyledButton data-test="book-seat-btn">
             Reservar assento(s)
           </StyledButton>
         </form>

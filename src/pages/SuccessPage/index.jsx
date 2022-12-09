@@ -20,27 +20,27 @@ export default function SuccessPage() {
         </h2>
       </Headline>
       <Campos>
-        <CamposBox>
+        <CamposBox data-test="movie-info">
           <h3>Filme e sessão</h3>
           <h4>{movie}</h4>
           <h4>
             {date} {hour}
           </h4>
         </CamposBox>
-        <CamposBox>
+        <CamposBox data-test="seats-info">
           <h3>Ingressos</h3>
           {seats.map((seat) => (
             <h4 key={seat}>Assento {seat}</h4>
           ))}
         </CamposBox>
-        <CamposBox>
+        <CamposBox data-test="client-info">
           <h3>Comprador</h3>
           <h4>Nome: {nome}</h4>
           <h4>CPF: {cpf}</h4>
         </CamposBox>
       </Campos>
-      <StyledLink to={`/`}>
-        <button>Voltar para Home</button>
+      <StyledLink to={"/"}>
+        <button data-test="go-home-btn">Voltar para Home</button>
       </StyledLink>
     </SuccessContainer>
   );

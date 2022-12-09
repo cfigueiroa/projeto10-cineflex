@@ -18,12 +18,14 @@ export default function ShowtimesPage() {
 
   useEffect(() => {
     axios
-      .get(`${url}/${endpoint[0]}/${id}/${endpoint[1]}`)
+      .get(`${url}/${endpoint.movies}/${id}/${endpoint.showtimes}`)
       .then((res) => setShowtimes(res.data))
       .catch((err) => console.log(err));
   }, [id]);
 
-  if (!showtimes) return <Spinner/>;
+  if (!showtimes) {
+    return <Spinner />;
+  }
 
   return (
     <>
@@ -33,7 +35,7 @@ export default function ShowtimesPage() {
         </Headline>
         {showtimes.days.map((day) => {
           return (
-            <Day key={day.id}>
+            <Day data-test="movie-day" key={day.id}>
               <h3>
                 {day.weekday} - {day.date}
               </h3>
@@ -41,7 +43,7 @@ export default function ShowtimesPage() {
                 {day.showtimes.map((st) => {
                   return (
                     <StyledLink to={`/assentos/${st.id}`} key={st.id}>
-                      <button>
+                      <button data-test="showtime">
                         <p>{st.name}</p>
                       </button>
                     </StyledLink>

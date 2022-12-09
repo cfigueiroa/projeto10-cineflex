@@ -10,7 +10,7 @@ export default function Header() {
     <StyledHeader>
       {location.pathname !== "/" && (
         <div>
-          <img src={back} alt="voltar" onClick={() => navigate(-1)} style={{cursor: 'pointer'}} />
+          <img data-test="go-home-header-btn" src={back} alt="voltar" onClick={() => navigate(-1)} style={{cursor: 'pointer'}} />
         </div>
       )}
       <StyledLink to="/">
