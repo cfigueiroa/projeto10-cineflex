@@ -15,6 +15,7 @@ import {
   StyledButton,
 } from "./styles";
 import Spinner from "../../components/Spinner";
+import { cpfMask } from "../../constants/mask";
 
 export default function SeatsPage() {
   const { id } = useParams();
@@ -23,6 +24,7 @@ export default function SeatsPage() {
   const [pickedSeatsNames, setPickedSeatsNames] = useState([]);
   const [name, setName] = useState("");
   const [cpf, setCpf] = useState("");
+  const [footer, setFooter] = useState(true);
   const navigate = useNavigate();
 
   function addSeat(id, avaliable, name) {
@@ -86,7 +88,7 @@ export default function SeatsPage() {
       .catch((err) => console.log(err));
   }, [id]);
 
-  if (!seats) return <Spinner/>;
+  if (!seats) return <Spinner />;
 
   return (
     <>
@@ -119,43 +121,52 @@ export default function SeatsPage() {
             <p>Indisponível</p>
           </InfoItem>
         </Info>
-        <form>
+        <form onSubmit={(e) => customSubmit(e)}>
           <StyledLabel>
             Nome do comprador: <br />
             <StyledInput
+              required
               value={name}
               onChange={(e) => setName(e.target.value)}
               type="text"
               placeholder="Digite seu nome..."
+              onFocus={() => setFooter(false)}
+              onBlur={() => setFooter(true)}
             />{" "}
             <br />
           </StyledLabel>
           <StyledLabel>
             CPF do comprador: <br />
             <StyledInput
+              required
+              minLength="14"
+              maxLength="14"
               value={cpf}
-              onChange={(e) => setCpf(e.target.value)}
-              type="text"
+              onChange={(e) => setCpf(cpfMask(e.target.value))}
               placeholder="Digite seu CPF..."
+              onFocus={() => setFooter(false)}
+              onBlur={() => setFooter(true)}
             />
             <br />
           </StyledLabel>
-          <StyledButton onClick={(e) => customSubmit(e)}>
+          <StyledButton>
             Reservar assento(s)
           </StyledButton>
         </form>
       </Container>
-      <Footer>
-        <div>
-          <img src={seats.movie.posterURL} alt={seats.movie.title}></img>
-        </div>
-        <div>
-          <p>{seats.movie.title}</p>
-          <p>
-            {seats.day.weekday} - {seats.name}
-          </p>
-        </div>
-      </Footer>
+      {footer && (
+        <Footer>
+          <div>
+            <img src={seats.movie.posterURL} alt={seats.movie.title}></img>
+          </div>
+          <div>
+            <p>{seats.movie.title}</p>
+            <p>
+              {seats.day.weekday} - {seats.name}
+            </p>
+          </div>
+        </Footer>
+      )}
     </>
   );
 }
