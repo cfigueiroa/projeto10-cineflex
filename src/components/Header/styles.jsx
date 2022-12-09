@@ -10,6 +10,7 @@ export const StyledLink = styled(Link)`
 `;
 
 export const StyledHeader = styled.header`
+  gap: 20px;
   position: fixed;
   display: flex;
   justify-content: center;

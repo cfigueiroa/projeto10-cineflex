@@ -16,6 +16,12 @@ export default function Header() {
       <StyledLink to="/">
         <h1>CINEFLEX</h1>
       </StyledLink>
+      {/* sorry about this */}
+      {location.pathname !== "/" && (
+        <div>
+          <img src={back} alt="i'm a CSS master" style={{visibility: 'hidden'}} />
+        </div>
+      )}
     </StyledHeader>
   );
 }

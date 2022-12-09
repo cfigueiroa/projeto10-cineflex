@@ -14,7 +14,7 @@ export default function MoviesPage() {
       .catch((err) => console.log(err));
   }, []);
 
-  if (!movies) return <Spinner/>;
+  if (!movies) return <Spinner />;
 
   return (
     <Container>

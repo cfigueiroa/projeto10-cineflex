@@ -26,7 +26,6 @@ export default function SeatsPage() {
   const navigate = useNavigate();
 
   function addSeat(id, avaliable, name) {
-    console.log(`id: ${id} | avaliable: ${avaliable}`);
     if (avaliable) {
       if (!pickedSeats.includes(id)) {
         setPickedSeats([...pickedSeats, id]);
@@ -81,7 +80,6 @@ export default function SeatsPage() {
   }
 
   useEffect(() => {
-    console.log("useEffect");
     axios
       .get(`${url}/${endpoint[1]}/${id}/${endpoint[2]}`)
       .then((res) => setSeats(res.data))
