@@ -48,7 +48,7 @@ export default function SeatsPage() {
     return "unavailable";
   }
 
-  function customSubmit(e) {
+  async function customSubmit(e) {
     e.preventDefault();
     if (name === "" || cpf === "") {
       alert("Preencha todos os campos");
@@ -60,25 +60,26 @@ export default function SeatsPage() {
         cpf,
         ids: pickedSeats,
       };
-      axios
-        .post(`${url}/${endpoint.seats}/${endpoint.bookMany}`, body)
-        .then((res) => {
-          console.log(res);
-          navigate("/sucesso", {
-            state: {
-              cpf,
-              date: seats.day.date,
-              hour: seats.name,
-              movie: seats.movie.title,
-              nome: name,
-              seats: pickedSeatsNames,
-            },
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-          alert("Erro ao reservar assento(s)");
+      try {
+        const res = await axios.post(
+          `${url}/${endpoint.seats}/${endpoint.bookMany}`,
+          body
+        );
+        console.log(res);
+        navigate("/sucesso", {
+          state: {
+            cpf,
+            date: seats.day.date,
+            hour: seats.name,
+            movie: seats.movie.title,
+            nome: name,
+            seats: pickedSeatsNames,
+          },
         });
+      } catch (err) {
+        console.log(err);
+        alert("Erro ao reservar assento(s)");
+      }
     }
   }
 
