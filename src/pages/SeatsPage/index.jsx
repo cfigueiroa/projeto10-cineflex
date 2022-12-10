@@ -1,3 +1,7 @@
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+
 import {
   Container,
   Headline,
@@ -11,9 +15,7 @@ import {
 } from "./styles";
 import { cpfMask } from "../../constants/mask";
 import { url, endpoint } from "../../services/API";
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+
 import Footer from "../../components/Footer";
 import Spinner from "../../components/Spinner";
 
@@ -27,19 +29,19 @@ export default function SeatsPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  function addSeat(id, avaliable, name) {
-    if (avaliable && pickedSeats.includes(id)) {
+  function toggleSeat(id, isAvailable, name) {
+    if (isAvailable && pickedSeats.includes(id)) {
       setPickedSeats(pickedSeats.filter((seat) => seat !== id));
       setPickedSeatsNames(pickedSeatsNames.filter((seat) => seat !== name));
-    } else if (avaliable) {
+    } else if (isAvailable) {
       setPickedSeats([...pickedSeats, id]);
       setPickedSeatsNames([...pickedSeatsNames, name]);
     } else {
       alert("Assento indisponível");
     }
   }
-
-  function getStatus(name, id) {
+  
+  function getSeatStatus(name, id) {
     if (pickedSeats.includes(id)) {
       return "selected";
     } else if (seats.seats[name - 1].isAvailable) {
@@ -47,8 +49,8 @@ export default function SeatsPage() {
     }
     return "unavailable";
   }
-
-  async function customSubmit(e) {
+  
+  async function handleSubmit(e) {
     e.preventDefault();
     if (name === "" || cpf === "") {
       alert("Preencha todos os campos");
@@ -82,14 +84,14 @@ export default function SeatsPage() {
       }
     }
   }
-
+  
   useEffect(() => {
     axios
       .get(`${url}/${endpoint.showtimes}/${id}/${endpoint.seats}`)
       .then((res) => setSeats(res.data))
       .catch((err) => console.log(err));
   }, [id]);
-
+  
   if (!seats) {
     return <Spinner />;
   }
@@ -104,9 +106,9 @@ export default function SeatsPage() {
           {seats.seats.map((seat) => (
             <SeatDiv
               data-test="seat"
-              status={getStatus(seat.name, seat.id)}
+              status={getSeatStatus(seat.name, seat.id)}
               key={seat.id}
-              onClick={() => addSeat(seat.id, seat.isAvailable, seat.name)}
+              onClick={() => toggleSeat(seat.id, seat.isAvailable, seat.name)}
             >
               {seat.name}
             </SeatDiv>
@@ -126,7 +128,7 @@ export default function SeatsPage() {
             <p>Indisponível</p>
           </InfoItem>
         </Info>
-        <form onSubmit={(e) => customSubmit(e)}>
+        <form onSubmit={(e) => handleSubmit(e)}>
           <StyledLabel>
             Nome do comprador: <br />
             <StyledInput
