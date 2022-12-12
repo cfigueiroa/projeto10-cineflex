@@ -25,37 +25,17 @@ export const Headline = styled.div`
 export const SeatDiv = styled.div`
   width: 26px;
   height: 26px;
-  background-color: ${(props) => {
-    switch (props.status) {
-      case "selected":
-        return "#1aae9e";
-      case "available":
-        return "#c3cfd9";
-      case "unavailable":
-        return "#fbe192";
-      default:
-        return "#fff";
-    }
-  }};
-  border: ${(props) => {
-    switch (props.status) {
-      case "selected":
-        return "1px solid #0E7D71";
-      case "available":
-        return "1px solid #808F9D";
-      case "unavailable":
-        return "1px solid #F7C52B";
-      default:
-        return "1px solid #fff";
-    }
-  }};
-  border-radius: 12px;
+  border: 1px solid #000;
+  border-radius: 50%;
+  background-color: ${(props) => props.isAvailable ? (props.isSelected ? "#1AAE9E" : "#C3CFD9") : "#FBE192"};
+  border-color: ${(props) => props.isAvailable ? (props.isSelected ? "#0E7D71" : "#808F9D") : "#F7C52B"};
+  color: #000;
+  cursor: ${(props) => (props.isAvailable ? "pointer" : "not-allowed")};
   font-family: "Roboto";
   font-size: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #000000;
 `;
 
 export const SeatsDiv = styled.div`

@@ -9,7 +9,6 @@ import {
 
 export default function SuccessPage() {
   const location = useLocation();
-  const { cpf, date, hour, movie, nome, seats } = location.state;
   return (
     <SuccessContainer>
       <Headline>
@@ -22,21 +21,29 @@ export default function SuccessPage() {
       <Campos>
         <CamposBox data-test="movie-info">
           <h3>Filme e sessão</h3>
-          <h4>{movie}</h4>
+          <h4>{location.state.movie.title}</h4>
           <h4>
-            {date} {hour}
+            {location.state.day.date} {location.state.name}
           </h4>
         </CamposBox>
         <CamposBox data-test="seats-info">
-          <h3>Ingressos</h3>
-          {seats.map((seat) => (
-            <h4 key={seat}>Assento {seat}</h4>
-          ))}
+          <h3>Ingresso(s)</h3>
+          {location.state.seats
+            .filter((obj) => obj.isSelected === true)
+            .map((obj) => (
+              <h4 key={obj.name}>Assento {obj.name}</h4>
+            ))}
         </CamposBox>
         <CamposBox data-test="client-info">
-          <h3>Comprador</h3>
-          <h4>Nome: {nome}</h4>
-          <h4>CPF: {cpf}</h4>
+          <h3>Comprador(es)</h3>
+          {location.state.seats
+            .filter((obj) => obj.isSelected === true)
+            .map((obj) => (
+              <div key={obj.name}>
+                <h4>Nome: {obj.nome}</h4>
+                <h4>CPF: {obj.cpf}</h4>
+              </div>
+            ))}
         </CamposBox>
       </Campos>
       <StyledLink to={"/"}>
