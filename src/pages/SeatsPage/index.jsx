@@ -21,106 +21,124 @@ import Spinner from "../../components/Spinner";
 
 export default function SeatsPage() {
   const [footer, setFooter] = useState(true);
-  const movieInfoRef = useRef(undefined);
   const [seats, setSeats] = useState(undefined);
   const { id } = useParams();
   const navigate = useNavigate();
+  const movieInfoRef = useRef(undefined);
+  const getURL = `${url}/${endpoint.showtimes}/${id}/${endpoint.seats}`;
+  const postURL = `${url}/${endpoint.seats}/${endpoint.bookMany}`;
 
   const handleSeatClick = (seat) => {
-    if (!seat.isAvailable) {
-      window.alert("Este assento não está disponível.");
-      return;
-    }
+    const alertMessage = "Este assento não está disponível.";
+    seat.isAvailable ? setSeats(handleUpdatedSeats(seat, seats)) : window.alert(alertMessage);
+  };
 
-    const updatedSeats = seats.map((s) => {
-      if (s.id === seat.id) {
-        if (s.isSelected) {
-          if (
-            window.confirm(
-              "Tem certeza de que deseja remover este assento e limpar os dados associados?"
-            )
-          ) {
-            return {
-              ...s,
-              isSelected: false,
-              nome: "",
-              cpf: "",
-            };
-          } else {
-            return s;
-          }
-        } else {
-          return {
-            ...s,
-            isSelected: true,
-          };
-        }
-      } else {
-        return s;
-      }
-    });
-    setSeats(updatedSeats);
+  const handleUpdatedSeats = (seat, seats) => {
+    return seats.map((s) =>
+      // If the seat is the one that was clicked, handle it otherwise return the seat
+      s.id === seat.id ? handleSeat(seat, s) : s
+    );
+  };
+
+  const handleSeat = (seat, s) => s.isSelected ? handleRemovingSeat(seat) : handleSelectingSeat(seat);
+
+  const handleRemovingSeat = (seat) => {
+    const confirmMessage = `Tem certeza de que deseja remover o assento ${seat.name} e limpar os dados associados?`;
+    // If the user confirms that they want to remove the seat, return the updated seat
+    if (window.confirm(confirmMessage)) {
+      return {
+        ...seat,
+        isSelected: false,
+        nome: "",
+        cpf: "",
+      };
+    }
+    return seat;
+  };
+
+  const handleSelectingSeat = (seat) => {
+    // Return the updated seat
+    return {
+      ...seat,
+      isSelected: true,
+    };
   };
 
   const handleSeatDataChange = (seat, field, value) => {
-    const updatedSeats = seats.map((s) => {
-      if (s.id === seat.id) {
-        return {
-          ...s,
-          [field]: value,
-        };
-      } else {
+    // Update the seats array
+    setSeats(
+      seats.map((s) => {
+        // If the seat is the one that was changed, update it
+        if (s.id === seat.id) {
+          return {
+            ...seat,
+            [field]: value,
+          };
+        }
         return s;
-      }
-    });
-    setSeats(updatedSeats);
+      })
+    );
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Get the selected seats
     const selectedSeats = seats.filter((seat) => seat.isSelected);
-    const selectedSeatsData = selectedSeats.map((seat) => ({
+    // Get the data for the selected seats
+    const selectedSeatsData = handleSelectedSeatsData(selectedSeats);
+    const body = handleBody(selectedSeats, selectedSeatsData);
+    axios
+      .post(postURL, body)
+      .then(() =>
+        navigate("/sucesso", { state: { ...movieInfoRef.current, seats } })
+      )
+      .catch((err) => console.log(err));
+  };
+
+  const handleSelectedSeatsData = (selectedSeats) => {
+    // Return the data for the selected seats
+    return selectedSeats.map((seat) => ({
       idAssento: seat.id,
       nome: seat.nome,
       cpf: seat.cpf,
     }));
-    const body = {
+  };
+
+  const handleBody = (selectedSeats, selectedSeatsData) => {
+    return {
       ids: selectedSeats.map((seat) => seat.id),
       compradores: selectedSeatsData,
     };
-    const postURL = `${url}/${endpoint.seats}/${endpoint.bookMany}`;
-    axios
-      .post(postURL, body)
-      .then((res) => {
-        navigate("/sucesso", { state: { ...movieInfoRef.current, seats } });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   };
 
   useEffect(() => {
-    const getURL = `${url}/${endpoint.showtimes}/${id}/${endpoint.seats}`;
     axios
       .get(getURL)
       .then((res) => {
-        setSeats(
-          res.data.seats.map((seat) => ({
-            ...seat,
-            isSelected: false,
-            nome: "",
-            cpf: "",
-          }))
-        );
-        delete res.data.seats;
-        movieInfoRef.current = res.data;
+        // Call the function to transform the response data and set the state
+        handleResponseData(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [id]);
+  }, [getURL]);
 
-  if (!seats || !movieInfoRef.current) {
+  function handleResponseData(data) {
+    // Transform the response data and create a new object
+    const seats = data.seats.map((seat) => ({
+      ...seat,
+      isSelected: false,
+      nome: "",
+      cpf: "",
+    }));
+    // Set the state using the new object
+    setSeats(seats);
+    // Store the movie info in a ref for later use
+    delete data.seats;
+    movieInfoRef.current = data;
+  }
+
+  if (!movieInfoRef.current) {
     return <Spinner />;
   }
 
@@ -132,13 +150,7 @@ export default function SeatsPage() {
         </Headline>
         <SeatsDiv>
           {seats.map((seat) => (
-            <SeatDiv
-              data-test="seat"
-              key={seat.id}
-              isAvailable={seat.isAvailable}
-              isSelected={seat.isSelected}
-              onClick={() => handleSeatClick(seat)}
-            >
+            <SeatDiv data-test="seat" key={seat.id} isAvailable={seat.isAvailable} isSelected={seat.isSelected} onClick={() => handleSeatClick(seat)}>
               {seat.name}
             </SeatDiv>
           ))}
@@ -171,9 +183,7 @@ export default function SeatsPage() {
                     data-test="client-name"
                     id={`nome-${seat.id}`}
                     onBlur={() => setFooter(true)}
-                    onChange={(e) =>
-                      handleSeatDataChange(seat, "nome", e.target.value)
-                    }
+                    onChange={(e) => handleSeatDataChange(seat, "nome", e.target.value)}
                     onFocus={() => setFooter(false)}
                     placeholder={`Digite seu nome... ${seat.name}`}
                     required
@@ -192,9 +202,7 @@ export default function SeatsPage() {
                     minLength="14"
                     onBlur={() => setFooter(true)}
                     placeholder={`Digite seu CPF... ${seat.name}`}
-                    onChange={(e) =>
-                      handleSeatDataChange(seat, "cpf", cpfMask(e.target.value))
-                    }
+                    onChange={(e) => handleSeatDataChange(seat, "cpf", cpfMask(e.target.value))}
                     onFocus={() => setFooter(false)}
                     required
                     type="text"
